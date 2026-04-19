@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+langgraph
+langchain-google-genai
+pypdf2
+numpy
+python-dotenv

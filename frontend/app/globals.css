@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #020617;
+}
+
+.command-grid {
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+.neural-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.neural-scroll::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
+}
+
+.neural-scroll::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.7);
+}

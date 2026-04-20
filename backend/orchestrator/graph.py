@@ -8,6 +8,7 @@ import uuid
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, ConfigDict, Field
 
+from core.config import settings
 from core.document_parser import extract_invoice_text
 from core.fastrouter_client import call_json_with_fallback
 from core.models import AnalyzeResponse, FinalJudgement, ForensicLogEntry, SieveOutcome, SieveResult, SieveStatus
@@ -160,7 +161,7 @@ def _extract_data_node(state: FraudMeshState) -> FraudMeshState:
     if extracted_text.strip():
         try:
             payload, _used_model = call_json_with_fallback(
-                models=["anthropic/claude-3.5-sonnet"],
+                models=settings.extraction_models,
                 messages=[
                     {
                         "role": "system",
@@ -257,7 +258,7 @@ def _sieve_vision_node(state: FraudMeshState) -> FraudMeshState:
         state["invoice_bytes"],
         filename=state["filename"],
         content_type=state["content_type"],
-        models=["google/gemini-1.5-pro"],
+        models=settings.vision_models,
     )
     result = _entry_to_sieve_result(entry)
     return {"vision_result": result}

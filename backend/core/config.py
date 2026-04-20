@@ -52,7 +52,9 @@ class Settings(BaseSettings):
     )
     vision_models: list[str] = Field(
         default_factory=lambda: [
+            "openai/gpt-4o-mini",
             "openai/gpt-4o",
+            "google/gemini-1.5-flash",
             "google/gemini-1.5-pro",
         ]
     )

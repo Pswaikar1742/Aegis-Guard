@@ -36,3 +36,13 @@
 - Rewired `backend/orchestrator/graph.py` to a LangGraph v2 pipeline with `extract_data_node` (Claude 3.5 Sonnet via FastRouter), six parallel sieve branches (metadata, checksum, arithmetic, benford, vision, registry), and a terminal `aggregator_node` producing the mission ForensicOutput contract.
 - Added new deterministic OSINT registry sieve module (`backend/sieves/registry.py`) and integrated Gemini 1.5 Pro Vision routing for spatial analysis through FastRouter.
 - Wired FastAPI analysis entrypoint to `POST /api/v1/analyze` with backward-compatible alias `POST /analyze` in `backend/routes/analyze.py`.
+- Commenced Phase 4 frontend implementation and replaced the placeholder UI with a fully wired forensic command center in `frontend/app/components/CommandCenter.tsx`.
+- Implemented a cyber-forensic dark mode interface using Tailwind (base `slate-950`, primary `emerald`, fraud accent `rose`) with animated verdict banner, dotted drag-and-drop upload zone, neural stream panel, and 2x3 six-sieve result grid.
+- Added strict TypeScript frontend API contracts (`frontend/app/types.ts`, `frontend/app/lib/contracts.ts`) and removed mock result behavior by binding UI state directly to backend `POST /api/v1/analyze` responses.
+- Implemented theatrical but non-mock neural stream sequencing in frontend (`frontend/app/components/ForensicStream.tsx`) during live request execution only.
+- Added frontend build infrastructure for Tailwind + strict TypeScript (`frontend/tailwind.config.ts`, `frontend/postcss.config.js`, `frontend/tsconfig.json`, `frontend/next-env.d.ts`, `frontend/app/globals.css`) and set `NEXT_PUBLIC_API_URL` to the active backend runtime host in `frontend/.env.local`.
+- Validated Phase 4 frontend buildability with dependency install and successful Next.js production artifact generation (`frontend/.next` present) and zero reported frontend diagnostics errors.
+- Improved user-facing forensic clarity by adding a weighted trust-score engine in frontend (`frontend/app/lib/forensics.ts`) with explicit math: `Trust Score = max(0, 100 - Σ(weight × risk))`.
+- Added `TrustScorePanel` (`frontend/app/components/TrustScorePanel.tsx`) to show score band (HIGH/MEDIUM/LOW/CRITICAL), scoring formula, and plain-language reasons for non-pass sieves directly below the score.
+- Refactored result grid messaging (`frontend/app/components/ResultGrid.tsx`) from developer-style raw failures to user-friendly states (`PASS`, `WARN`, `FAIL`) with readable fraud reasons and concise technical evidence snippets.
+- Re-validated browser flow locally against Railway backend (`/api/v1/analyze`) confirming trust score rendering, human-readable "Why it was flagged" reasons list, and six-sieve card population from real backend response.

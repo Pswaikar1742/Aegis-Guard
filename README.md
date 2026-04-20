@@ -10,4 +10,8 @@ Aegis Guard is a neuro-symbolic invoice fraud detection system with a five-sieve
 
 See `docs/MISSION.md` for the authoritative architecture and phase status.
 
+## Deployment Note
+
+Frontend Vercel builds use `frontend/next.config.mjs` to skip TypeScript and ESLint checks during `next build` to prevent memory-exhaustion build failures.
+
 Owner: PSW

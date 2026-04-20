@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: ['./app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
@@ -9,6 +10,9 @@ const config: Config = {
         'text-primary': '#1A1815',
         'primary-accent': '#C3ED00',
         'subtle-border': '#EAEAEA',
+        'dark-background': '#0f172a',
+        'dark-panel': '#1e293b',
+        'dark-text-primary': '#e2e8f0',
       },
       keyframes: {
         scan: {

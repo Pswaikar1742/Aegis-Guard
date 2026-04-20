@@ -30,8 +30,8 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
   return (
     <section>
       <header className="mb-4 flex items-end justify-between">
-        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary">6-Sieve Result Grid</h3>
-        <span className="text-xs uppercase tracking-[0.2em] text-stone-500">2 x 3 Forensic Matrix</span>
+        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">6-Sieve Result Grid</h3>
+        <span className="text-xs uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">2 x 3 Forensic Matrix</span>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -43,20 +43,20 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
           const isFail = presentation.state === 'FAIL'
 
           const cardClass = isPass
-            ? 'border border-primary-accent bg-background'
+            ? 'border border-primary-accent bg-background dark:bg-dark-panel dark:border-primary-accent'
             : isWarning
-            ? 'border border-subtle-border border-dashed bg-background'
+            ? 'border border-subtle-border border-dashed bg-background dark:bg-dark-panel dark:border-slate-500'
             : isFail
-            ? 'border-2 border-text-primary bg-background'
-            : 'border border-subtle-border bg-background'
+            ? 'border-2 border-text-primary dark:border-red-500 bg-background dark:bg-dark-panel'
+            : 'border border-subtle-border bg-background dark:bg-dark-panel dark:border-slate-700'
 
           const badgeClass = isPass
-            ? 'border border-primary-accent bg-background text-text-primary'
+            ? 'border border-primary-accent bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-primary-accent'
             : isWarning
-            ? 'border border-subtle-border bg-background text-text-primary'
+            ? 'border border-subtle-border bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-slate-500'
             : isFail
-            ? 'border border-text-primary bg-background text-text-primary'
-            : 'border border-subtle-border bg-background text-text-primary'
+            ? 'border border-text-primary dark:border-red-500 bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary'
+            : 'border border-subtle-border bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-slate-700'
 
           const title = isPass
             ? 'No Anomaly Detected.'
@@ -67,23 +67,23 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
             : 'Awaiting analysis output.'
 
           return (
-            <article key={card.label} className={`rounded-xl p-4 transition ${cardClass}`}>
+            <article key={card.label} className={`rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] ${cardClass}`}>
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
-                  <h4 className="text-lg font-semibold text-text-primary">{card.label}</h4>
-                  <p className="text-xs text-text-primary">{card.subtitle}</p>
+                  <h4 className="text-lg font-semibold text-text-primary dark:text-dark-text-primary">{card.label}</h4>
+                  <p className="text-xs text-text-primary dark:text-dark-text-primary">{card.subtitle}</p>
                 </div>
                 <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${badgeClass}`}>
                   {isPass ? 'PASS' : isWarning ? 'WARN' : isFail ? 'FAIL' : 'PENDING'}
                 </span>
               </div>
 
-              <p className="text-sm leading-relaxed text-text-primary">
+              <p className="text-sm leading-relaxed text-text-primary dark:text-dark-text-primary">
                 {title}
               </p>
 
               {log && presentation.technicalDetail ? (
-                <p className="mt-2 text-xs leading-relaxed text-text-primary">Evidence: {presentation.technicalDetail}</p>
+                <p className="mt-2 text-xs leading-relaxed text-text-primary dark:text-dark-text-primary">Evidence: {presentation.technicalDetail}</p>
               ) : null}
             </article>
           )

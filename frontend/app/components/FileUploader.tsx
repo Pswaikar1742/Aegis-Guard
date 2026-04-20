@@ -56,27 +56,27 @@ export default function FileUploader({
   }
 
   const containerClasses = isDragging
-    ? 'border-primary-accent bg-background'
-    : 'border-subtle-border bg-background'
+    ? 'border-primary-accent bg-background dark:bg-dark-panel'
+    : 'border-subtle-border bg-background dark:bg-dark-panel'
 
   return (
-    <section className="rounded-2xl border border-subtle-border bg-background p-5">
-      <h3 className="mb-4 text-lg font-semibold uppercase tracking-[0.25em] text-text-primary">Upload Zone</h3>
+    <section className="rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
+      <h3 className="mb-4 text-lg font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">Upload Zone</h3>
 
       <div
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        className={`rounded-xl border-2 border-dashed p-8 text-center transition ${containerClasses}`}
+        className={`rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-300 ${containerClasses}`}
       >
-        <p className="text-sm text-stone-700">Drop invoice PDF or image here</p>
-        <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone-500">PDF / PNG / JPG / WEBP</p>
+        <p className="text-sm text-stone-700 dark:text-stone-300">Drop invoice PDF or image here</p>
+        <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">PDF / PNG / JPG / WEBP</p>
 
         <button
           type="button"
           disabled={isAnalyzing}
           onClick={() => inputRef.current?.click()}
-          className="mt-5 rounded-md border border-subtle-border px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-5 rounded-xl border border-subtle-border dark:border-slate-700 px-4 py-2 text-sm font-semibold text-text-primary dark:text-dark-text-primary transition-all duration-300 hover:bg-stone-100 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Select File
         </button>
@@ -91,11 +91,11 @@ export default function FileUploader({
         />
       </div>
 
-      <div className="mt-4 rounded-lg border border-subtle-border bg-stone-50 p-3 text-sm text-stone-700">
+      <div className="mt-4 rounded-2xl border border-subtle-border dark:border-slate-700 bg-stone-50 dark:bg-slate-800 p-4 text-sm text-stone-700 dark:text-stone-300">
         {selectedFile ? (
           <>
-            <p className="text-text-primary">Selected: {selectedFile.name}</p>
-            <p className="text-xs text-stone-500">{Math.max(1, Math.round(selectedFile.size / 1024))} KB</p>
+            <p className="text-text-primary dark:text-dark-text-primary">Selected: {selectedFile.name}</p>
+            <p className="text-xs text-stone-500 dark:text-stone-400">{Math.max(1, Math.round(selectedFile.size / 1024))} KB</p>
           </>
         ) : (
           <p>No evidence file selected yet.</p>
@@ -106,7 +106,7 @@ export default function FileUploader({
         type="button"
         disabled={isAnalyzing || !selectedFile}
         onClick={onAnalyze}
-        className="mt-4 w-full rounded-lg border border-primary-accent bg-primary-accent px-4 py-3 text-sm font-bold uppercase tracking-[0.2em] text-text-primary transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-4 w-full rounded-2xl border border-primary-accent bg-primary-accent px-4 py-3 text-sm font-bold uppercase tracking-[0.2em] text-text-primary transition-all duration-300 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {isAnalyzing ? 'Analyzing...' : 'Run Neural Analysis'}
       </button>

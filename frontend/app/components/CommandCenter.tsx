@@ -5,11 +5,15 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { extractErrorMessage, isAnalyzeResponse } from '../lib/contracts'
 import { buildTrustScoreSummary } from '../lib/forensics'
 import { AnalyzeResponse } from '../types'
+import ThemeToggle from './ThemeToggle'
 import FileUploader from './FileUploader'
 import ForensicStream from './ForensicStream'
 import ResultGrid from './ResultGrid'
+import ResultGridSkeleton from './ResultGridSkeleton'
 import TrustScorePanel from './TrustScorePanel'
 import VerdictBanner from './VerdictBanner'
+
+import TrustDnaChart from './TrustDnaChart'
 
 const SYSTEM_SEQUENCE = [
   '[SYSTEM] Establishing secure uplink with backend mesh...',
@@ -128,21 +132,33 @@ export default function CommandCenter() {
   }, [result])
 
   return (
-    <main className="min-h-screen bg-background text-text-primary">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:px-8 md:py-10">
-        <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-text-primary">Aegis Guard</p>
-          <h1 className="text-3xl font-black uppercase tracking-[0.1em] text-text-primary md:text-5xl">
-            Forensic Command Center
-          </h1>
-          <p className="max-w-3xl text-sm text-stone-600 md:text-base">
-            Submit an invoice to activate the 6-sieve neuro-symbolic mesh and receive auditable fraud evidence in real time.
-          </p>
+    <main className="min-h-screen bg-background dark:bg-dark-background text-text-primary dark:text-dark-text-primary transition-colors duration-300">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-8 px-6 py-10 md:px-12 md:py-14 lg:px-16 lg:py-16">
+        <header className="flex items-start justify-between">
+          <div className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.35em] text-text-primary dark:text-dark-text-primary">Aegis Guard</p>
+            <h1 className="text-3xl font-black uppercase tracking-[0.1em] text-text-primary dark:text-dark-text-primary md:text-5xl">
+              Forensic Command Center
+            </h1>
+            <p className="max-w-3xl text-sm text-stone-600 dark:text-stone-400 md:text-base">
+              Submit an invoice to activate the 6-sieve neuro-symbolic mesh and receive auditable fraud evidence in real time.
+            </p>
+          </div>
+          <ThemeToggle />
         </header>
 
         <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
 
-        <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
+        <div className="grid gap-4 lg:grid-cols-[1fr_350px]">
+          <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
+          
+          <section className="flex flex-col justify-center rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
+            <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">
+              Trust DNA Radar
+            </h3>
+            <TrustDnaChart forensicLog={forensicLog} />
+          </section>
+        </div>
 
         <section className="grid gap-4 lg:grid-cols-2">
           <FileUploader
@@ -154,7 +170,7 @@ export default function CommandCenter() {
           <ForensicStream logs={streamLogs} isAnalyzing={isAnalyzing} />
         </section>
 
-        <ResultGrid forensicLog={forensicLog} />
+        {isAnalyzing ? <ResultGridSkeleton /> : <ResultGrid forensicLog={forensicLog} />}
       </div>
     </main>
   )

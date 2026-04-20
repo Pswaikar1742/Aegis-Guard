@@ -1,9 +1,10 @@
 import './globals.css'
-import { Share_Tech_Mono, Space_Grotesk } from 'next/font/google'
+import { Inter, Share_Tech_Mono } from 'next/font/google'
+import { ThemeProvider } from './components/ThemeProvider'
 
-const headingFont = Space_Grotesk({
+const primaryFont = Inter({
   subsets: ['latin'],
-  variable: '--font-heading',
+  variable: '--font-sans',
 })
 
 const monoFont = Share_Tech_Mono({
@@ -18,8 +19,12 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${headingFont.variable} ${monoFont.variable}`}>
-      <body className="bg-slate-950 text-emerald-500 [font-family:var(--font-heading)]">{children}</body>
+    <html lang="en" suppressHydrationWarning className={`${primaryFont.variable} ${monoFont.variable}`}>
+      <body className="bg-background text-text-primary dark:bg-dark-background dark:text-dark-text-primary [font-family:var(--font-sans)] transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

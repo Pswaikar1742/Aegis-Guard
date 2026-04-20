@@ -26,6 +26,7 @@ def _error_response(
     ).model_dump(exclude_none=True)
 
 
+@router.post("/api/v1/analyze", response_model=AnalyzeResponse, status_code=status.HTTP_200_OK)
 @router.post("/analyze", response_model=AnalyzeResponse, status_code=status.HTTP_200_OK)
 async def analyze_invoice(response: Response, invoice: UploadFile = File(...)) -> AnalyzeResponse:
     request_id = str(uuid.uuid4())

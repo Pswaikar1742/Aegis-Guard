@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sieves.benford import _mad_against_benford, analyze_benford
+from sieves.benford import analyze_benford, calculate_variance_score
 
 
 def _benford_like_values() -> list[float]:
@@ -31,39 +31,38 @@ def _uniform_values() -> list[float]:
     return values
 
 
+def _to_invoice_text(values: list[float]) -> str:
+    return " ".join(str(item) for item in values)
+
+
 def test_mad_against_benford_is_low_for_benford_like_values() -> None:
-    mad, usable = _mad_against_benford(_benford_like_values())
-    assert usable > 900
-    assert mad < 0.015
+    variance = calculate_variance_score(_benford_like_values())
+    assert variance < 0.0002
 
 
-def test_analyze_benford_passes_for_benford_like_distribution(monkeypatch) -> None:
+def test_analyze_benford_passes_for_benford_like_distribution() -> None:
     values = _benford_like_values()
-    monkeypatch.setattr("sieves.benford._extract_numbers_via_llm", lambda _text: values)
 
-    entry, extracted = analyze_benford("")
+    entry, extracted = analyze_benford(_to_invoice_text(values))
 
     assert len(extracted) >= 900
     assert entry.sieve == "Statistical"
     assert entry.result.value == "PASS"
-    assert "MAD=" in entry.details
+    assert "variance score=" in entry.details
 
 
-def test_analyze_benford_flags_anomaly_for_uniform_distribution(monkeypatch) -> None:
+def test_analyze_benford_flags_anomaly_for_uniform_distribution() -> None:
     values = _uniform_values()
-    monkeypatch.setattr("sieves.benford._extract_numbers_via_llm", lambda _text: values)
 
-    entry, extracted = analyze_benford("")
+    entry, extracted = analyze_benford(_to_invoice_text(values))
 
     assert len(extracted) >= 1000
-    assert entry.result.value == "ANOMALY"
+    assert entry.result.value == "FAILED"
     assert "non-conforming" in entry.details
 
 
-def test_analyze_benford_warns_for_small_sample(monkeypatch) -> None:
-    monkeypatch.setattr("sieves.benford._extract_numbers_via_llm", lambda _text: [101.0, 202.0, 303.0])
-
-    entry, extracted = analyze_benford("")
+def test_analyze_benford_warns_for_small_sample() -> None:
+    entry, extracted = analyze_benford("101 202 303")
 
     assert extracted == [101.0, 202.0, 303.0]
     assert entry.result.value == "WARNING"

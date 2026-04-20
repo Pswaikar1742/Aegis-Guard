@@ -1,4 +1,4 @@
-# MISSION BRIEF: AEGIS-GUARD (RIH 2026)
+# MISSION CONTROL: AEGIS-GUARD v2.0 (6-SIEVE MESH)
 
 ## 1. Primary Objective
 We are building a **Neuro-Symbolic Fraud Mesh**, not a chatbot classifier.
@@ -20,30 +20,44 @@ The product goal is to **prove invoice fraud with deterministic checks** whereve
 ## 4. Model Routing Strategy (FastRouter-First)
 We use **FastRouter** to avoid free-tier provider rate-limit failures during live demos.
 
-- **Extraction workloads (Sieve 2 and Sieve 3 support):** Claude/GPT class models via FastRouter with fallback sequencing.
-- **Vision workloads (Sieve 4):** multimodal models via FastRouter with fallback sequencing.
+- **Extraction workloads (Sieve 2, Sieve 3, Sieve 4, and Sieve 6 support):** model-assisted field extraction with deterministic post-validation.
+- **Vision workloads (Sieve 5):** Gemini 1.5 Pro Vision as primary tamper-analysis model.
+- **Registry/OSINT workloads (Sieve 6):** deterministic cross-reference between extracted vendor name and GSTIN ownership signals.
 - **Secrets policy:** use environment variables only; no hardcoded keys in code or docs.
 
-## 5. The 4-Sieve Architecture
-Our pipeline contains four independent, auditable sieves:
+## 5. New 6-Sieve Pipeline
+Our execution pipeline contains six auditable sieves:
 
-1. **Sieve 1 - Cryptographic / Metadata**
-   - Reads PDF metadata via PyPDF2.
-   - Flags suspicious producer/creator signatures (for example, editing-tool traces).
+1. **S1 - Metadata (Deterministic)**
+  - Performs PDF EXIF and metadata creator/modified analysis.
+  - Flags suspicious producer/creator signatures and edit-tool traces.
 
-2. **Sieve 2 - Checksum**
-   - Extracts GSTIN candidates from document text (regex plus model-assisted fallback).
-   - Applies deterministic GSTIN checksum validation.
+2. **S2 - Checksum (Deterministic)**
+  - Extracts GSTIN values from invoice text.
+  - Applies deterministic GSTIN modulo-10 checksum validation.
 
-3. **Sieve 3 - Statistical (Benford)**
+3. **S3 - Arithmetic (Deterministic)**
+  - Recalculates quantity multiplied by price and tax for all extracted line items.
+  - Flags total-tampering and semantic inconsistencies.
+
+4. **S4 - Benford's Law (Statistical)**
    - Extracts line-item-like numeric values from document text.
-   - Computes Benford conformity using MAD thresholding.
+  - Computes statistical variance on first-digit frequency.
 
-4. **Sieve 4 - Spatial / Vision**
-   - Renders PDF page imagery and performs visual tamper analysis via multimodal model.
-   - Detects signals such as local compression artifacts, alignment issues, and layout inconsistencies.
+5. **S5 - Spatial Vision (Probabilistic Vision)**
+  - Uses Gemini 1.5 Pro Vision for font and pixel-level tampering analysis.
+  - Detects suspicious edit regions, signature box artifacts, and layout anomalies.
 
-## 6. Orchestration and Verdict Logic
+6. **S6 - OSINT Registry (Deterministic OSINT)**
+  - Cross-references extracted vendor name against GSTIN owner identity.
+  - Produces deterministic corroboration evidence for final fraud judgement.
+
+## 6. Backend Architecture
+- **`/backend/sieves/`:** one file per sieve.
+- **`/backend/orchestrator/graph.py`:** LangGraph state machine wiring all six sieves.
+- API route layer remains thin and delegates forensic flow to the orchestrator.
+
+## 7. Orchestration and Verdict Logic
 LangGraph executes the sieve flow in sequence and produces a final judgement:
 
 - `FRAUD_DETECTED` when severe anomalies/failures are multiple.
@@ -52,8 +66,8 @@ LangGraph executes the sieve flow in sequence and produces a final judgement:
 
 Every run emits a forensic log entry per sieve for auditability.
 
-## 7. API Contract (Non-Negotiable)
-- **Endpoint:** `POST /analyze`
+## 8. API Contract (Non-Negotiable)
+- **Endpoint:** `POST /api/v1/analyze` (legacy alias: `POST /analyze`)
 - **Request:** `multipart/form-data` with a file field named `invoice`
 - **Response (200):**
 
@@ -71,18 +85,28 @@ Every run emits a forensic log entry per sieve for auditability.
       "sieve": "Checksum",
       "result": "FAILED",
       "details": "GSTIN checksum failed for candidate values extracted from invoice text."
+    },
+    {
+      "sieve": "Arithmetic",
+      "result": "ANOMALY",
+      "details": "Arithmetic inconsistencies found in line-level and total-level checks."
+    },
+    {
+      "sieve": "OSINT",
+      "result": "PASS",
+      "details": "Vendor name and GSTIN ownership cross-reference matched."
     }
   ]
 }
 ```
 
-## 8. Delivery Phases (Current Status)
+## 9. Delivery Phases (Current Status)
 - **Phase 1:** Backend shell, FastAPI/CORS, sieve modules, LangGraph orchestration - **completed**
 - **Phase 2:** Deterministic hardening tests (GSTIN, Benford, fixture-backed `/analyze`) - **completed**
-- **Phase 3:** Orchestrator/API resilience hardening - **completed**
-- **Phase 4:** CISO console frontend integration and final demo polish - **next**
+- **Phase 3:** Orchestrator/API resilience hardening and Arithmetic/Semantic sieve integration - **completed**
+- **Phase 4:** Full six-sieve runtime integration and CISO console frontend integration - **next**
 
-## 9. Runtime Baseline
+## 10. Runtime Baseline
 Required environment configuration includes a valid FastRouter API key and model list values for extraction/vision routing.
 
 If required runtime keys are missing or invalid, backend startup must fail immediately.

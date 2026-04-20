@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import io
 from typing import Any
+from typing import Sequence
 
 import pypdfium2 as pdfium
 
@@ -53,9 +54,9 @@ def _prepare_visual_payload(
     raise ValueError("Vision sieve supports PDF, PNG, JPG, JPEG, and WEBP invoices.")
 
 
-def _call_vision_model(data_url: str) -> VisionAnalysis:
+def _call_vision_model(data_url: str, *, models: Sequence[str] | None = None) -> VisionAnalysis:
     payload, _used_model = call_json_with_fallback(
-        models=settings.vision_models,
+        models=models or settings.vision_models,
         messages=[
             {
                 "role": "system",
@@ -102,10 +103,11 @@ def analyze_vision(
     *,
     filename: str,
     content_type: str,
+    models: Sequence[str] | None = None,
 ) -> ForensicLogEntry:
     try:
         data_url, _mime_type = _prepare_visual_payload(invoice_bytes, filename, content_type)
-        analysis = _call_vision_model(data_url)
+        analysis = _call_vision_model(data_url, models=models)
     except Exception as exc:
         return ForensicLogEntry(
             sieve="Spatial",

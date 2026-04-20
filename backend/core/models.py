@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SieveOutcome(str, Enum):
@@ -12,6 +12,19 @@ class SieveOutcome(str, Enum):
     FAILED = "FAILED"
     WARNING = "WARNING"
     ERROR = "ERROR"
+
+
+class SieveStatus(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    WARNING = "WARNING"
+
+
+class SieveResult(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+
+    status: SieveStatus
+    message: str = Field(min_length=1)
 
 
 class FinalJudgement(str, Enum):

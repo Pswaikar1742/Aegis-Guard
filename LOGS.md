@@ -18,3 +18,21 @@
 - Executed backend tests successfully after Phase 3 changes: `13 passed`.
 - Downloaded Indian dataset online from Kaggle (`kiruthikas005/msme-invoices-and-transactions`) into `datasets/indian/`, generated PDF invoice fixtures (`datasets/indian/pdf-fixtures-phase3/`), and ran live backend validation with provided FastRouter key.
 - Live validation outcomes: health endpoint `200`, single-invoice end-to-end analysis `200` in ~16.3s with full 4-sieve forensic log, and concurrent 3-invoice run all `200` with 4-sieve logs (`SUMMARY_OK=True`).
+- Added new deterministic Arithmetic/Semantic sieve (`backend/sieves/arithmetic.py`) to detect invoice total tampering using line-level math checks (`qty * unit_price`), subtotal recomputation, tax-total reconciliation, and semantic total sanity checks.
+- Integrated Arithmetic sieve into LangGraph orchestration (`backend/orchestrator/graph.py`) between Checksum and Benford and exported it via sieve package index (`backend/sieves/__init__.py`).
+- Expanded test coverage for the five-sieve pipeline: new arithmetic unit tests (`backend/tests/unit/test_arithmetic.py`) and integration contract updates asserting five forensic entries including `Arithmetic` (`backend/tests/integration/test_analyze_endpoint.py`).
+- Updated mission/pitch document (`docs/MISSION.md`) to the new 5-sieve core architecture with S6 OSINT registry overlay roadmap notation.
+- Mission Control sync completed for Aegis-Guard v2.0: documentation upgraded from prior 4/5-sieve framing to the authoritative **6-Sieve Mesh** specification.
+- Updated `docs/MISSION.md` to define the new six-sieve pipeline exactly as S1 Metadata, S2 Checksum, S3 Arithmetic, S4 Benford, S5 Spatial Vision, and S6 OSINT Registry.
+- Updated architecture contract in `docs/MISSION.md` to explicitly state one sieve file per module in `backend/sieves/` and LangGraph wiring of all six sieves in `backend/orchestrator/graph.py`.
+- Marked documentation state as synchronized to the v2.0 mission profile for pitch alignment.
+- Implemented deterministic sieve contracts in `backend/sieves/` with strict typed `SieveResult` statuses (`PASS`/`FAIL`/`WARNING`) and clear status messages for metadata, checksum, arithmetic, and Benford modules.
+- Added `validate_gstin(gstin: str) -> bool` in `backend/sieves/checksum.py` using a deterministic modulo-10 checksum path and migrated checksum analysis to deterministic text-extraction-only candidates.
+- Added strict arithmetic data models (`InvoiceLineItem`, `InvoiceData`) and deterministic `verify_invoice_math(data: InvoiceData)` in `backend/sieves/arithmetic.py` with INR 1 variance tolerance for rounding.
+- Reworked Benford implementation in `backend/sieves/benford.py` to use NumPy first-digit distribution and explicit variance scoring, then mapped outcomes to standardized sieve statuses.
+- Added strict sieve result contracts to `backend/core/models.py` (`SieveStatus`, `SieveResult`) and exposed deterministic sieve entrypoints via `backend/sieves/__init__.py`.
+- Updated backend dependency manifest to include NumPy and updated unit/integration tests to align with deterministic sieve internals and new checksum/arithmetic behavior.
+- Verified backend quality gate after refactor: `pytest` passed with `16 passed`.
+- Rewired `backend/orchestrator/graph.py` to a LangGraph v2 pipeline with `extract_data_node` (Claude 3.5 Sonnet via FastRouter), six parallel sieve branches (metadata, checksum, arithmetic, benford, vision, registry), and a terminal `aggregator_node` producing the mission ForensicOutput contract.
+- Added new deterministic OSINT registry sieve module (`backend/sieves/registry.py`) and integrated Gemini 1.5 Pro Vision routing for spatial analysis through FastRouter.
+- Wired FastAPI analysis entrypoint to `POST /api/v1/analyze` with backward-compatible alias `POST /analyze` in `backend/routes/analyze.py`.

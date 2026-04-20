@@ -1,15 +1,29 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Aegis Guard Backend")
+from core.config import settings
+from routes.analyze import router as analyze_router
+
+
+app = FastAPI(title=settings.app_name, version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
-async def root():
-    return {"status": "ok"}
+async def root() -> dict[str, str]:
+    return {"status": "ok", "service": "aegis-guard-backend"}
 
 
-@app.post("/upload")
-async def upload(file: UploadFile = File(...)):
-    contents = await file.read()
-    return JSONResponse({"filename": file.filename, "size": len(contents)})
+@app.get("/healthz")
+async def healthz() -> dict[str, str]:
+    return {"status": "healthy"}
+
+
+app.include_router(analyze_router)

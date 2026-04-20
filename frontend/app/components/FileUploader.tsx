@@ -61,7 +61,7 @@ export default function FileUploader({
 
   return (
     <section className="rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
-      <h3 className="mb-4 text-lg font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">Upload Zone</h3>
+      <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-primary dark:text-dark-text-primary">UPLOAD ZONE</h3>
 
       <div
         onDragOver={onDragOver}
@@ -106,7 +106,7 @@ export default function FileUploader({
         type="button"
         disabled={isAnalyzing || !selectedFile}
         onClick={onAnalyze}
-        className="mt-4 w-full rounded-2xl border border-primary-accent bg-primary-accent px-4 py-3 text-sm font-bold uppercase tracking-[0.2em] text-text-primary transition-all duration-300 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-4 w-full rounded-2xl border border-lime-400 dark:border-lime-500 bg-lime-400 dark:bg-lime-500 px-8 py-3 text-sm font-bold uppercase tracking-wider text-text-primary transition-colors duration-300 hover:bg-lime-500 dark:hover:bg-lime-600 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {isAnalyzing ? 'Analyzing...' : 'Run Neural Analysis'}
       </button>

@@ -30,7 +30,7 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
   return (
     <section>
       <header className="mb-4 flex items-end justify-between">
-        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">6-Sieve Result Grid</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-text-primary dark:text-dark-text-primary">6-SIEVE RESULT GRID</h3>
         <span className="text-xs uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">2 x 3 Forensic Matrix</span>
       </header>
 

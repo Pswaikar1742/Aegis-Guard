@@ -4,10 +4,11 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 
-import { ForensicLogEntry } from '../types'
+import { ForensicLogEntry, Verdict } from '../types'
 
 interface TrustDnaChartProps {
   forensicLog: ForensicLogEntry[]
+  verdict: Verdict | null
 }
 
 const SCORE_MAP: Record<string, number> = {
@@ -27,7 +28,7 @@ const SIEVES = [
   { key: 'OSINT', subject: 'Registry' },
 ]
 
-export default function TrustDnaChart({ forensicLog }: TrustDnaChartProps) {
+export default function TrustDnaChart({ forensicLog, verdict }: TrustDnaChartProps) {
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -48,6 +49,15 @@ export default function TrustDnaChart({ forensicLog }: TrustDnaChartProps) {
 
   const labelColor = resolvedTheme === 'dark' ? '#e2e8f0' : '#1A1815'
 
+  let radarColor = '#C3ED00' // primary-accent
+  if (verdict === 'VALIDATED') {
+    radarColor = '#22c55e' // text-green-500
+  } else if (verdict === 'SUSPICIOUS') {
+    radarColor = '#eab308' // text-yellow-500
+  } else if (verdict === 'FRAUD_DETECTED') {
+    radarColor = '#ef4444' // text-red-500
+  }
+
   return (
     <div className="h-[250px] w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -60,8 +70,8 @@ export default function TrustDnaChart({ forensicLog }: TrustDnaChartProps) {
           <Radar
             name="Trust Score"
             dataKey="score"
-            stroke="#C3ED00"
-            fill="#C3ED00"
+            stroke={radarColor}
+            fill={radarColor}
             fillOpacity={0.5}
             isAnimationActive={true}
           />

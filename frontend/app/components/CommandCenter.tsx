@@ -137,7 +137,7 @@ export default function CommandCenter() {
         <header className="flex items-start justify-between">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.35em] text-text-primary dark:text-dark-text-primary">Aegis Guard</p>
-            <h1 className="text-3xl font-black uppercase tracking-[0.1em] text-text-primary dark:text-dark-text-primary md:text-5xl">
+            <h1 className="text-4xl font-bold uppercase tracking-[0.1em] text-text-primary dark:text-dark-text-primary md:text-5xl">
               Forensic Command Center
             </h1>
             <p className="max-w-3xl text-sm text-stone-600 dark:text-stone-400 md:text-base">
@@ -147,30 +147,33 @@ export default function CommandCenter() {
           <ThemeToggle />
         </header>
 
-        <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
+        <div className="grid gap-8">
+          {/* Top Row */}
+          <div className="grid gap-4 lg:grid-cols-2">
+            <FileUploader
+              selectedFile={selectedFile}
+              isAnalyzing={isAnalyzing}
+              onFileSelected={(file) => setSelectedFile(file)}
+              onAnalyze={runAnalysis}
+            />
+            <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
+          </div>
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_350px]">
-          <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
-          
-          <section className="flex flex-col justify-center rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
-            <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">
-              Trust DNA Radar
-            </h3>
-            <TrustDnaChart forensicLog={forensicLog} />
-          </section>
+          {/* Bottom Row */}
+          <div className="grid gap-4 lg:grid-cols-2">
+            {isAnalyzing ? <ResultGridSkeleton /> : <ResultGrid forensicLog={forensicLog} />}
+
+            <div className="flex flex-col gap-4">
+              <section className="flex flex-col justify-center rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
+                <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-text-primary dark:text-dark-text-primary">
+                  TRUST DNA RADAR
+                </h3>
+                <TrustDnaChart forensicLog={forensicLog} verdict={result?.final_judgement ?? null} />
+              </section>
+              <ForensicStream logs={streamLogs} isAnalyzing={isAnalyzing} />
+            </div>
+          </div>
         </div>
-
-        <section className="grid gap-4 lg:grid-cols-2">
-          <FileUploader
-            selectedFile={selectedFile}
-            isAnalyzing={isAnalyzing}
-            onFileSelected={(file) => setSelectedFile(file)}
-            onAnalyze={runAnalysis}
-          />
-          <ForensicStream logs={streamLogs} isAnalyzing={isAnalyzing} />
-        </section>
-
-        {isAnalyzing ? <ResultGridSkeleton /> : <ResultGrid forensicLog={forensicLog} />}
       </div>
     </main>
   )

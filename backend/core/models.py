@@ -24,12 +24,21 @@ class ForensicLogEntry(BaseModel):
     sieve: str
     result: SieveOutcome
     details: str
+    correlation_id: str | None = None
+    duration_ms: int | None = None
 
 
 class AnalyzeResponse(BaseModel):
     status: Literal["Completed"] = "Completed"
     final_judgement: FinalJudgement
     forensic_log: list[ForensicLogEntry] = Field(default_factory=list)
+
+
+class ErrorResponse(BaseModel):
+    code: str
+    message: str
+    request_id: str
+    details: str | None = None
 
 
 class VisionAnalysis(BaseModel):

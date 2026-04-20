@@ -40,6 +40,9 @@ class Settings(BaseSettings):
     # Fail-fast: this key is required for boot.
     fastrouter_api_key: str = Field(..., min_length=20)
     fastrouter_base_url: str = "https://api.fastrouter.ai/v1"
+    fastrouter_request_timeout_sec: float = 45.0
+    fastrouter_max_retries_per_model: int = 2
+    fastrouter_retry_backoff_sec: float = 0.5
 
     extraction_models: list[str] = Field(
         default_factory=lambda: [

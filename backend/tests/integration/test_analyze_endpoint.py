@@ -70,6 +70,9 @@ def test_analyze_endpoint_with_pdf_fixture(monkeypatch) -> None:
     )
 
     assert response.status_code == 200
+    request_id = response.headers.get("X-Request-ID")
+    assert request_id
+
     body = response.json()
     assert body["status"] == "Completed"
     assert body["final_judgement"] == "VALIDATED"
@@ -83,3 +86,56 @@ def test_analyze_endpoint_with_pdf_fixture(monkeypatch) -> None:
         "Spatial",
     ]
     assert all(entry["result"] in {"PASS", "WARNING"} for entry in forensic_log)
+    assert all(entry.get("correlation_id") == request_id for entry in forensic_log)
+    assert all(isinstance(entry.get("duration_ms"), int) for entry in forensic_log)
+    assert all(entry.get("duration_ms", -1) >= 0 for entry in forensic_log)
+
+
+def test_analyze_endpoint_degrades_when_model_calls_fail(monkeypatch) -> None:
+    assert FIXTURE_PATH.exists(), f"Missing test fixture: {FIXTURE_PATH}"
+
+    monkeypatch.setattr(
+        "sieves.checksum._extract_gstin_candidates_via_llm",
+        lambda _text: (_ for _ in ()).throw(RuntimeError("simulated checksum model outage")),
+    )
+    monkeypatch.setattr(
+        "sieves.benford._extract_numbers_via_llm",
+        lambda _text: (_ for _ in ()).throw(RuntimeError("simulated benford model outage")),
+    )
+    monkeypatch.setattr(
+        "sieves.vision._call_vision_model",
+        lambda _data_url: (_ for _ in ()).throw(RuntimeError("simulated vision model outage")),
+    )
+
+    build_graph.cache_clear()
+
+    with FIXTURE_PATH.open("rb") as fixture_file:
+        payload = fixture_file.read()
+
+    client = TestClient(app)
+    response = client.post(
+        "/analyze",
+        files={"invoice": ("invoice_sample.pdf", payload, "application/pdf")},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "Completed"
+    assert body["final_judgement"] == "SUSPICIOUS"
+    assert len(body["forensic_log"]) == 4
+    assert any(entry["result"] == "ERROR" for entry in body["forensic_log"])
+
+
+def test_analyze_endpoint_returns_standard_error_payload_for_empty_invoice() -> None:
+    client = TestClient(app)
+    response = client.post(
+        "/analyze",
+        files={"invoice": ("empty.pdf", b"", "application/pdf")},
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    detail = body["detail"]
+    assert detail["code"] == "EMPTY_INVOICE"
+    assert detail["message"] == "Uploaded invoice is empty."
+    assert isinstance(detail["request_id"], str) and detail["request_id"]

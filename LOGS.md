@@ -1,5 +1,4 @@
 # Aegis-Guard Technical Log
-
 ## 2026-04-20
 - Added workspace instruction file `.github/instructions/aegis-guard.instructions.md` to enforce Aegis-AI protocols: context-first `docs/MISSION.md` reads, mandatory post-implementation logging, strict Pydantic/TypeScript contracts, modular backend placement, and fail-fast environment validation.
 - Implemented Phase 1 backend foundation with deployable FastAPI + CORS app (`backend/main.py`) and production `/analyze` endpoint (`backend/routes/analyze.py`) wired to LangGraph state-machine orchestration (`backend/orchestrator/graph.py`).
@@ -11,3 +10,11 @@
 - Added a real PDF invoice fixture (`tests/fixtures/invoice_sample.pdf`) and an integration test for `POST /analyze` (`tests/integration/test_analyze_endpoint.py`) that exercises the full LangGraph sieve pipeline while stubbing external FastRouter calls for deterministic offline validation.
 - Added pytest dependency (`backend/requirements.txt`) and test bootstrap (`tests/conftest.py`) that pins a valid-length test API key to prevent collection-time failures caused by short placeholder shell environment values.
 - Executed test suite successfully: `9 passed`.
+- Updated `docs/MISSION.md` to align with current FastRouter-first architecture, deterministic 4-sieve behavior, finalized API contract wording, and current delivery phase status (Phase 1 and Phase 2 completed).
+- Implemented Phase 3 backend resilience hardening: retry/backoff model-call strategy with per-model attempt control and timeout settings (`backend/core/fastrouter_client.py`, `backend/core/config.py`).
+- Added forensic metadata in analysis responses: per-sieve `correlation_id` and `duration_ms`, plus request correlation propagation from API route to LangGraph state (`backend/routes/analyze.py`, `backend/orchestrator/graph.py`, `backend/core/models.py`).
+- Standardized `/analyze` error contract for client-safe failures (`EMPTY_INVOICE`, `INVOICE_TOO_LARGE`, `ANALYSIS_PIPELINE_ERROR`) with typed payload shape and request IDs.
+- Added Phase 3 tests: retry/fallback client unit tests (`tests/unit/test_fastrouter_client.py`) and integration assertions for correlation/timing metadata, degradation behavior, and standardized error response format (`tests/integration/test_analyze_endpoint.py`).
+- Executed backend tests successfully after Phase 3 changes: `13 passed`.
+- Downloaded Indian dataset online from Kaggle (`kiruthikas005/msme-invoices-and-transactions`) into `datasets/indian/`, generated PDF invoice fixtures (`datasets/indian/pdf-fixtures-phase3/`), and ran live backend validation with provided FastRouter key.
+- Live validation outcomes: health endpoint `200`, single-invoice end-to-end analysis `200` in ~16.3s with full 4-sieve forensic log, and concurrent 3-invoice run all `200` with 4-sieve logs (`SUMMARY_OK=True`).

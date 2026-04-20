@@ -47,3 +47,12 @@
 - Refactored result grid messaging (`frontend/app/components/ResultGrid.tsx`) from developer-style raw failures to user-friendly states (`PASS`, `WARN`, `FAIL`) with readable fraud reasons and concise technical evidence snippets.
 - Re-validated browser flow locally against Railway backend (`/api/v1/analyze`) confirming trust score rendering, human-readable "Why it was flagged" reasons list, and six-sieve card population from real backend response.
 - Added `frontend/next.config.mjs` to disable TypeScript and ESLint checks during `next build` on Vercel (`typescript.ignoreBuildErrors=true`, `eslint.ignoreDuringBuilds=true`) to mitigate build memory exhaustion and unblock deployment.
+## 2026-04-21
+- Executed frontend visual system migration from cyber-dark styling to a clean light theme using shared Tailwind tokens (`background`, `text-primary`, `primary-accent`, `subtle-border`) across the command center shell and typography hierarchy.
+- Refactored `frontend/app/components/CommandCenter.tsx` to remove dark gradients/backgrounds, enforce primary text styling for system headings, and apply neutral secondary body copy tone.
+- Refactored `frontend/app/components/FileUploader.tsx` and `frontend/app/components/ForensicStream.tsx` with clean panel surfaces, subtle-border containers, and a primary-accent `Run Neural Analysis` call-to-action.
+- Updated upload-zone interaction states to use subtle dashed border by default and primary-accent border on drag-over for clear interaction feedback.
+- Redesigned verdict communication in `frontend/app/components/VerdictBanner.tsx` with subtle-border baseline for all states, primary-accent validation emphasis, and thick text-primary border emphasis for `FRAUD_DETECTED`.
+- Redesigned `frontend/app/components/TrustScorePanel.tsx` to use clean bordered sections, large text-primary trust score display, and simple subtle-border reason boxes for "Why It Was Flagged".
+- Overhauled `frontend/app/components/ResultGrid.tsx` state styling rules: PASS uses thin primary-accent border, WARN uses dashed subtle-border, FAIL uses thick solid text-primary border, and all card text now uses text-primary.
+- Removed legacy dark status backgrounds and state tints (including prior rose/emerald/amber dark backgrounds) from core result communication components to improve consistency and readability.

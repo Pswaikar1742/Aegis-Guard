@@ -128,16 +128,14 @@ export default function CommandCenter() {
   }, [result])
 
   return (
-    <main className="command-grid relative min-h-screen overflow-hidden bg-slate-950 text-emerald-500">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.13),transparent_45%),radial-gradient(circle_at_bottom,rgba(244,63,94,0.08),transparent_35%)]" />
-
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:px-8 md:py-10">
+    <main className="min-h-screen bg-background text-text-primary">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:px-8 md:py-10">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-emerald-300/90">Aegis Guard</p>
-          <h1 className="text-3xl font-black uppercase tracking-[0.1em] text-emerald-400 md:text-5xl">
+          <p className="text-xs uppercase tracking-[0.35em] text-text-primary">Aegis Guard</p>
+          <h1 className="text-3xl font-black uppercase tracking-[0.1em] text-text-primary md:text-5xl">
             Forensic Command Center
           </h1>
-          <p className="max-w-3xl text-sm text-slate-300 md:text-base">
+          <p className="max-w-3xl text-sm text-stone-600 md:text-base">
             Submit an invoice to activate the 6-sieve neuro-symbolic mesh and receive auditable fraud evidence in real time.
           </p>
         </header>

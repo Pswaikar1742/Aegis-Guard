@@ -30,8 +30,8 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
   return (
     <section>
       <header className="mb-4 flex items-end justify-between">
-        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-emerald-400">6-Sieve Result Grid</h3>
-        <span className="text-xs uppercase tracking-[0.2em] text-slate-400">2 x 3 Forensic Matrix</span>
+        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary">6-Sieve Result Grid</h3>
+        <span className="text-xs uppercase tracking-[0.2em] text-stone-500">2 x 3 Forensic Matrix</span>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -43,20 +43,20 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
           const isFail = presentation.state === 'FAIL'
 
           const cardClass = isPass
-            ? 'border-emerald-500 bg-emerald-950/20'
+            ? 'border border-primary-accent bg-background'
             : isWarning
-            ? 'border-amber-400 bg-amber-950/20'
+            ? 'border border-subtle-border border-dashed bg-background'
             : isFail
-            ? 'border-rose-500 bg-rose-950/20 animate-pulse'
-            : 'border-slate-700 bg-slate-900/65'
+            ? 'border-2 border-text-primary bg-background'
+            : 'border border-subtle-border bg-background'
 
           const badgeClass = isPass
-            ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/50'
+            ? 'border border-primary-accent bg-background text-text-primary'
             : isWarning
-            ? 'bg-amber-400/15 text-amber-300 border border-amber-400/50'
+            ? 'border border-subtle-border bg-background text-text-primary'
             : isFail
-            ? 'bg-rose-500/15 text-rose-300 border border-rose-500/50'
-            : 'bg-slate-500/15 text-slate-300 border border-slate-500/40'
+            ? 'border border-text-primary bg-background text-text-primary'
+            : 'border border-subtle-border bg-background text-text-primary'
 
           const title = isPass
             ? 'No Anomaly Detected.'
@@ -67,23 +67,23 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
             : 'Awaiting analysis output.'
 
           return (
-            <article key={card.label} className={`rounded-xl border p-4 transition ${cardClass}`}>
+            <article key={card.label} className={`rounded-xl p-4 transition ${cardClass}`}>
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
-                  <h4 className="text-lg font-semibold text-emerald-300">{card.label}</h4>
-                  <p className="text-xs text-slate-300">{card.subtitle}</p>
+                  <h4 className="text-lg font-semibold text-text-primary">{card.label}</h4>
+                  <p className="text-xs text-text-primary">{card.subtitle}</p>
                 </div>
                 <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${badgeClass}`}>
                   {isPass ? 'PASS' : isWarning ? 'WARN' : isFail ? 'FAIL' : 'PENDING'}
                 </span>
               </div>
 
-              <p className={`text-sm leading-relaxed ${isFail ? 'text-rose-200' : isWarning ? 'text-amber-200' : 'text-emerald-200/90'}`}>
+              <p className="text-sm leading-relaxed text-text-primary">
                 {title}
               </p>
 
               {log && presentation.technicalDetail ? (
-                <p className="mt-2 text-xs leading-relaxed text-slate-400">Evidence: {presentation.technicalDetail}</p>
+                <p className="mt-2 text-xs leading-relaxed text-text-primary">Evidence: {presentation.technicalDetail}</p>
               ) : null}
             </article>
           )

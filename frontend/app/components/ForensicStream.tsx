@@ -15,26 +15,26 @@ export default function ForensicStream({ logs, isAnalyzing }: ForensicStreamProp
   }, [logs])
 
   return (
-    <section className="rounded-2xl border border-slate-700 bg-slate-900/60 p-5">
+    <section className="rounded-2xl border border-subtle-border bg-background p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-emerald-400">Neural Stream</h3>
+        <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary">Neural Stream</h3>
         <span
           className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
             isAnalyzing
-              ? 'border border-emerald-400/70 bg-emerald-500/15 text-emerald-300'
-              : 'border border-slate-600 bg-slate-700/40 text-slate-300'
+              ? 'border border-subtle-border bg-stone-100 text-text-primary'
+              : 'border border-subtle-border bg-background text-text-primary'
           }`}
         >
           {isAnalyzing ? 'LIVE' : 'IDLE'}
         </span>
       </div>
 
-      <div className="neural-scroll h-[286px] overflow-y-auto rounded-lg border border-slate-800 bg-slate-950/80 p-3 [font-family:var(--font-mono)]">
+      <div className="neural-scroll h-[286px] overflow-y-auto rounded-lg border border-subtle-border bg-stone-50 p-3 [font-family:var(--font-mono)]">
         {logs.length === 0 ? (
-          <p className="text-sm text-slate-400">[SYSTEM] Awaiting evidence stream initialization...</p>
+          <p className="text-sm text-stone-500">[SYSTEM] Awaiting evidence stream initialization...</p>
         ) : (
           logs.map((log, index) => (
-            <p key={`${log}-${index}`} className="mb-2 text-xs leading-relaxed text-emerald-200/95 md:text-sm">
+            <p key={`${log}-${index}`} className="mb-2 text-xs leading-relaxed text-text-primary md:text-sm">
               {log}
             </p>
           ))

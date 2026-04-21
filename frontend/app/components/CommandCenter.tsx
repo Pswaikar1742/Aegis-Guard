@@ -159,6 +159,9 @@ export default function CommandCenter() {
             <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
           </div>
 
+          {/* Trust Score Panel - Full Width */}
+          <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
+
           {/* Bottom Row */}
           <div className="grid gap-4 lg:grid-cols-2">
             {isAnalyzing ? <ResultGridSkeleton /> : <ResultGrid forensicLog={forensicLog} />}

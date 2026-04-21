@@ -293,15 +293,37 @@ def _aggregator_node(state: FraudMeshState) -> FraudMeshState:
         for name, result in ordered_results
     ]
 
-    fail_count = sum(1 for _name, result in ordered_results if result.status == SieveStatus.FAIL)
-    warning_count = sum(1 for _name, result in ordered_results if result.status == SieveStatus.WARNING)
+    # Weight-based trust score (same formula as frontend)
+    sieve_weights = {
+        "Cryptographic": 15,
+        "Checksum": 10,
+        "Arithmetic": 20,
+        "Statistical": 10,
+        "Spatial": 20,
+        "OSINT": 8,
+    }
 
-    if fail_count >= 2:
-        final_judgement = FinalJudgement.FRAUD_DETECTED
-    elif fail_count == 1 or warning_count >= 2:
+    outcome_risk = {
+        SieveStatus.PASS: 0.0,
+        SieveStatus.WARNING: 0.2,
+        SieveStatus.FAIL: 1.0,
+    }
+
+    total_penalty = 0.0
+    for name, result in ordered_results:
+        weight = sieve_weights.get(name, 0)
+        risk = outcome_risk.get(result.status, 0.65)
+        total_penalty += weight * risk
+
+    trust_score = max(0, round(100 - total_penalty))
+
+    # Map trust score to verdict
+    if trust_score >= 80:
+        final_judgement = FinalJudgement.VALIDATED
+    elif trust_score >= 60:
         final_judgement = FinalJudgement.SUSPICIOUS
     else:
-        final_judgement = FinalJudgement.VALIDATED
+        final_judgement = FinalJudgement.FRAUD_DETECTED
 
     return {"forensic_log": forensic_log, "final_judgement": final_judgement}
 

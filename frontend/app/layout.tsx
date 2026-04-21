@@ -15,6 +15,12 @@ const monoFont = Share_Tech_Mono({
 
 export const metadata = {
   title: 'Aegis Guard',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' },
+    ],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

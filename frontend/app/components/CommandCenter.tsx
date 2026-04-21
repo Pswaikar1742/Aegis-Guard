@@ -156,11 +156,11 @@ export default function CommandCenter() {
               onFileSelected={(file) => setSelectedFile(file)}
               onAnalyze={runAnalysis}
             />
-            <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
+            <div className="flex flex-col gap-4">
+              <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
+              <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
+            </div>
           </div>
-
-          {/* Trust Score Panel - Full Width */}
-          <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
 
           {/* Bottom Row */}
           <div className="grid gap-4 lg:grid-cols-2">

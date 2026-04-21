@@ -14,6 +14,8 @@ import TrustScorePanel from './TrustScorePanel'
 import VerdictBanner from './VerdictBanner'
 
 import TrustDnaChart from './TrustDnaChart'
+import ForensicReasonModal from './ForensicReasonModal'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const SYSTEM_SEQUENCE = [
   '[SYSTEM] Establishing secure uplink with backend mesh...',
@@ -41,6 +43,7 @@ export default function CommandCenter() {
   const [streamLogs, setStreamLogs] = useState<string[]>([])
   const [result, setResult] = useState<AnalyzeResponse | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [evidenceModalOpen, setEvidenceModalOpen] = useState(false)
 
   const streamTimerRef = useRef<number | null>(null)
   const streamCursorRef = useRef(0)
@@ -132,9 +135,26 @@ export default function CommandCenter() {
   }, [result])
 
   return (
-    <main className="min-h-screen bg-background dark:bg-dark-background text-text-primary dark:text-dark-text-primary transition-colors duration-300">
-      <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-8 px-6 py-10 md:px-12 md:py-14 lg:px-16 lg:py-16">
-        <header className="flex items-start justify-between">
+    <>
+      <AnimatePresence>
+        {evidenceModalOpen && trustScoreSummary && (
+          <ForensicReasonModal
+            summary={trustScoreSummary}
+            onClose={() => setEvidenceModalOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.main
+        animate={{
+          scale: evidenceModalOpen ? 0.98 : 1,
+          filter: evidenceModalOpen ? 'blur(8px)' : 'blur(0px)',
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className="min-h-screen bg-background dark:bg-dark-background text-text-primary dark:text-dark-text-primary transition-colors duration-300 transform-gpu"
+      >
+        <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-8 px-6 py-10 md:px-12 md:py-14 lg:px-16 lg:py-16">
+          <header className="flex items-start justify-between">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.35em] text-text-primary dark:text-dark-text-primary">Aegis Guard</p>
             <h1 className="text-4xl font-bold uppercase tracking-[0.1em] text-text-primary dark:text-dark-text-primary md:text-5xl">
@@ -158,7 +178,7 @@ export default function CommandCenter() {
             />
             <div className="flex flex-col gap-4">
               <VerdictBanner verdict={result?.final_judgement ?? null} analyzing={isAnalyzing} errorMessage={errorMessage} />
-              <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} />
+              <TrustScorePanel summary={trustScoreSummary} analyzing={isAnalyzing} onOpenEvidence={() => setEvidenceModalOpen(true)} />
             </div>
           </div>
 
@@ -167,7 +187,7 @@ export default function CommandCenter() {
             {isAnalyzing ? <ResultGridSkeleton /> : <ResultGrid forensicLog={forensicLog} />}
 
             <div className="flex flex-col gap-4">
-              <section className="flex flex-col justify-center rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
+              <section className="flex flex-col justify-center rounded-[2rem] border border-black/5 dark:border-white/5 bg-stone-50/40 dark:bg-slate-900/40 backdrop-blur-md p-6">
                 <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-text-primary dark:text-dark-text-primary">
                   TRUST DNA RADAR
                 </h3>
@@ -178,6 +198,7 @@ export default function CommandCenter() {
           </div>
         </div>
       </div>
-    </main>
+      </motion.main>
+    </>
   )
 }

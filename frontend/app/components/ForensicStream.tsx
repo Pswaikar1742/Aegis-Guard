@@ -15,21 +15,21 @@ export default function ForensicStream({ logs, isAnalyzing }: ForensicStreamProp
   }, [logs])
 
   return (
-    <section className="rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <section className="flex flex-col overflow-hidden rounded-[2.5rem] border border-black/5 dark:border-white/5 backdrop-blur-md bg-stone-50/40 dark:bg-slate-900/40 p-0">
+      <header className="flex items-center justify-between border-b border-black/5 dark:border-white/5 bg-white/20 dark:bg-slate-900/60 px-5 py-4">
         <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-text-primary dark:text-dark-text-primary">Neural Stream</h3>
         <span
           className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] transition-all duration-300 ${
             isAnalyzing
-              ? 'border border-subtle-border dark:border-slate-700 bg-stone-100 dark:bg-slate-700 text-text-primary dark:text-dark-text-primary'
-              : 'border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary'
+              ? 'border border-black/5 dark:border-white/5 bg-white/40 dark:bg-slate-700 text-text-primary dark:text-dark-text-primary shadow-sm'
+              : 'border border-black/5 dark:border-white/5 bg-white/20 dark:bg-slate-800 text-text-primary dark:text-dark-text-primary'
           }`}
         >
           {isAnalyzing ? 'LIVE' : 'IDLE'}
         </span>
-      </div>
+      </header>
 
-      <div className="neural-scroll h-[286px] overflow-y-auto rounded-2xl border border-subtle-border dark:border-slate-700 bg-stone-50 dark:bg-slate-800 p-4 [font-family:var(--font-mono)]">
+      <div className="neural-scroll h-[300px] overflow-y-auto p-5 [font-family:var(--font-mono)]">
         {logs.length === 0 ? (
           <p className="text-sm text-stone-500 dark:text-stone-400">[SYSTEM] Awaiting evidence stream initialization...</p>
         ) : (

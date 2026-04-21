@@ -60,7 +60,7 @@ export default function FileUploader({
     : 'border-subtle-border bg-background dark:bg-dark-panel'
 
   return (
-    <section className="rounded-3xl border border-subtle-border dark:border-slate-700 bg-background dark:bg-dark-panel p-6">
+    <section className="rounded-[2.5rem] border border-black/5 dark:border-white/5 backdrop-blur-md bg-stone-50/40 dark:bg-slate-900/40 p-6">
       <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-primary dark:text-dark-text-primary">UPLOAD ZONE</h3>
 
       <div
@@ -91,7 +91,7 @@ export default function FileUploader({
         />
       </div>
 
-      <div className="mt-4 rounded-2xl border border-subtle-border dark:border-slate-700 bg-stone-50 dark:bg-slate-800 p-4 text-sm text-stone-700 dark:text-stone-300">
+      <div className="mt-4 rounded-[1.5rem] border border-black/5 dark:border-white/5 bg-white/20 dark:bg-slate-900/50 p-4 text-sm text-stone-700 dark:text-stone-300 shadow-sm">
         {selectedFile ? (
           <>
             <p className="text-text-primary dark:text-dark-text-primary">Selected: {selectedFile.name}</p>

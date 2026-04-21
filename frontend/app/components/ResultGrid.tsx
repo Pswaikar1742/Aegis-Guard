@@ -43,20 +43,20 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
           const isFail = presentation.state === 'FAIL'
 
           const cardClass = isPass
-            ? 'border border-primary-accent bg-background dark:bg-dark-panel dark:border-primary-accent'
+            ? 'border border-primary-accent bg-stone-50/40 dark:bg-slate-900/40 dark:border-primary-accent'
             : isWarning
-            ? 'border border-subtle-border border-dashed bg-background dark:bg-dark-panel dark:border-slate-500'
+            ? 'border border-black/10 border-dashed bg-stone-50/40 dark:bg-slate-900/40 dark:border-white/20'
             : isFail
-            ? 'border-2 border-text-primary dark:border-red-500 bg-background dark:bg-dark-panel'
-            : 'border border-subtle-border bg-background dark:bg-dark-panel dark:border-slate-700'
+            ? 'border-2 border-text-primary dark:border-red-500 bg-stone-50/40 dark:bg-slate-900/40'
+            : 'border border-black/5 bg-stone-50/40 dark:bg-slate-900/40 dark:border-white/5'
 
           const badgeClass = isPass
-            ? 'border border-primary-accent bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-primary-accent'
+            ? 'border border-primary-accent bg-white/50 dark:bg-slate-800/50 text-text-primary dark:text-dark-text-primary dark:border-primary-accent'
             : isWarning
-            ? 'border border-subtle-border bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-slate-500'
+            ? 'border border-black/10 bg-white/50 dark:bg-slate-800/50 text-text-primary dark:text-dark-text-primary dark:border-white/20'
             : isFail
-            ? 'border border-text-primary dark:border-red-500 bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary'
-            : 'border border-subtle-border bg-background dark:bg-dark-panel text-text-primary dark:text-dark-text-primary dark:border-slate-700'
+            ? 'border border-text-primary dark:border-red-500 bg-white/50 dark:bg-slate-800/50 text-text-primary dark:text-dark-text-primary'
+            : 'border border-black/5 bg-white/50 dark:bg-slate-800/50 text-text-primary dark:text-dark-text-primary dark:border-white/5'
 
           const title = isPass
             ? 'No Anomaly Detected.'
@@ -67,13 +67,13 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
             : 'Awaiting analysis output.'
 
           return (
-            <article key={card.label} className={`rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] ${cardClass}`}>
+            <article key={card.label} className={`rounded-[1.5rem] backdrop-blur-md p-5 transition-all duration-300 hover:scale-[1.02] shadow-sm ${cardClass}`}>
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
                   <h4 className="text-lg font-semibold text-text-primary dark:text-dark-text-primary">{card.label}</h4>
-                  <p className="text-xs text-text-primary dark:text-dark-text-primary">{card.subtitle}</p>
+                  <p className="text-xs text-text-primary dark:text-dark-text-primary opacity-70">{card.subtitle}</p>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${badgeClass}`}>
+                <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm ${badgeClass}`}>
                   {isPass ? 'PASS' : isWarning ? 'WARN' : isFail ? 'FAIL' : 'PENDING'}
                 </span>
               </div>
@@ -83,7 +83,7 @@ export default function ResultGrid({ forensicLog }: ResultGridProps) {
               </p>
 
               {log && presentation.technicalDetail ? (
-                <p className="mt-2 text-xs leading-relaxed text-text-primary dark:text-dark-text-primary">Evidence: {presentation.technicalDetail}</p>
+                <p className="mt-3 text-xs leading-relaxed text-stone-500 dark:text-stone-400 border-t border-black/5 dark:border-white/5 pt-2">Evidence: {presentation.technicalDetail}</p>
               ) : null}
             </article>
           )

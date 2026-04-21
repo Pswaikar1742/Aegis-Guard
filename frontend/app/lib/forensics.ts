@@ -10,16 +10,16 @@ interface SieveWeightConfig {
 
 const SIEVE_WEIGHT_CONFIG: SieveWeightConfig[] = [
   { key: 'Cryptographic', label: 'Metadata', weight: 15 },
-  { key: 'Checksum', label: 'Checksum', weight: 20 },
+  { key: 'Checksum', label: 'Checksum', weight: 10 },
   { key: 'Arithmetic', label: 'Arithmetic', weight: 20 },
   { key: 'Statistical', label: 'Benford', weight: 10 },
   { key: 'Spatial', label: 'Vision', weight: 20 },
-  { key: 'OSINT', label: 'Registry', weight: 15 },
+  { key: 'OSINT', label: 'Registry', weight: 8 },
 ]
 
 const OUTCOME_RISK: Record<BackendSieveOutcome, number> = {
   PASS: 0,
-  WARNING: 0.45,
+  WARNING: 0.2,
   FAILED: 1,
   ANOMALY: 1,
   ERROR: 0.85,
